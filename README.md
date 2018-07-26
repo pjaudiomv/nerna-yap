@@ -10,8 +10,8 @@ index.php points to a custom menu structure. - **ne-input-method.php**
 
 * Option one points to Meeting Lookup - **input-method.php?Digits=2**
 * Option two plays a custom helpline title mp3 and points to **ne-helpline.php**
-    * ne-helpline.php option one points to a non-urgent helpline which is a custom service body - **helpline-search.php?override_service_body_id=18**
-    * ne-helpline.php option two points to the normal helpline search - **input-method.php?Digits=1**
+    * Option one points to a non-urgent helpline which is a custom service body - **helpline-search.php?override_service_body_id=18**
+    * Option two points to the normal helpline search - **input-method.php?Digits=1**
     * if any digit besides one or two is selected it redirects to **ne-input-method.php?Digits=2**
 * Option three points to Regional Meeting Directory SB and plays custom voicemail for ordering RMDs - **helpline-search.php?override_service_body_id=16**
 * Option four Plays a custom PR title mp3 then points to PR SB and plays custom voicemail. - **helpline-search.php?override_service_body_id=17**
