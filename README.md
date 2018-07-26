@@ -17,13 +17,13 @@ index.php points to a custom menu structure. - **ne-input-method.php**
 * Option four Plays a custom PR title mp3 then points to PR SB and plays custom voicemail. - **helpline-search.php?override_service_body_id=17**
     * PR can add helpline volunteers if wanted otherwise gos direct to voicemail.
 * Option five is for friends and family of addicts, plays a custom title mp3 and points to - **ne-concerned.php**
-    * Option two plays a custom emergency mp3
-    * Option three plays a custom non emergency mp3
+    * Option two plays a custom emergency mp3.
+    * Option three plays a custom non emergency mp3.
     * If any digit besides one or two is selected it redirects to - **index.php**
     * When custom mp3s are done playing it also gets redirected to - **index.php**
 * Option six plays a NA general info mp3 then points to - **na-info.php**
-    * Option one plays a custom mp3 with basic NA info
-    * Option two plays a custom mp3 with advanced NA info
+    * Option one plays a custom mp3 with basic NA info.
+    * Option two plays a custom mp3 with advanced NA info.
     * If any digit besides one or two is selected it redirects to - **index.php**
     * When custom mp3s are done playing it also gets redirected to - **index.php**
 
