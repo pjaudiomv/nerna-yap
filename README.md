@@ -4,7 +4,7 @@ This was created as a demo for the New England Region of NA to operate closely t
 
 The changes from base code are :
 
-* index.php points to a custom menu structure. - **ne-input-method.php**
+index.php points to a custom menu structure. - **ne-input-method.php**
 * Option one points to Meeting Lookup - **input-method.php?Digits=2**
 * Option two points to ne-helpline.php and plays a custom helpline title mp3.
     * ne-helpline.php option one points to a non-urgent helpline which is a custom service body - **helpline-search.php?override_service_body_id=18**
@@ -23,6 +23,6 @@ The changes from base code are :
     * Option two plays a custom mp3 with advanced NA info
     * if any digit besides one or two is selected it redirects to - **index.php**
     * when custom mp3s are done playing it gets redirected to - **index.php**
-* voicemail-complete.php - Added ability to send emails to service body using PHPMailer.
+voicemail-complete.php - Added ability to send emails to service body using PHPMailer.
 
 This is a mod of YAP 2.0.1 [YAP](https://github.com/radius314/yap/) - YAP
