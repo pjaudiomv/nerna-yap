@@ -12,6 +12,7 @@ The changes from base code are :
     * if any digit besides one or two is selected it redirects to ne-input-method.php?Digits=2
 * Option three points to Regional Meeting Directory SB and plays custom voicemail for ordering RMDs - helpline-search.php?override_service_body_id=16
 * Option four Plays a custom PR title mp3 then points to PR SB and plays custom voicemail. -   helpline-search.php?override_service_body_id=17
+    * PR can add helpline volunteers if wanted otherwise gos direct to voicemail.
 * Option five is for friends and family of addicts, plays a custom title mp3 and points to -ne-concerned.php
     * Option two plays a custom emergency mp3
     * Option three plays a custom non emergency mp3
