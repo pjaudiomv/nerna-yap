@@ -20,11 +20,11 @@ index.php points to a custom menu structure. - **ne-input-method.php**
     * Option two plays a custom emergency mp3
     * Option three plays a custom non emergency mp3
     * if any digit besides one or two is selected it redirects to - **index.php**
-    * when custom mp3s are done playing it gets redirected to - **index.php**
+    * when custom mp3s are done playing it also gets redirected to - **index.php**
 * Option six plays a NA general info mp3 then points to - **na-info.php**
     * Option one plays a custom mp3 with basic NA info
     * Option two plays a custom mp3 with advanced NA info
     * if any digit besides one or two is selected it redirects to - **index.php**
-    * when custom mp3s are done playing it gets redirected to - **index.php**
+    * when custom mp3s are done playing it also gets redirected to - **index.php**
 
 voicemail-complete.php - Added ability to send emails to service body using PHPMailer.
