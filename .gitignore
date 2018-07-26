@@ -4,3 +4,4 @@ cookie.txt
 *_cookie.txt
 config.php.*
 test.php
+.DS_Store
