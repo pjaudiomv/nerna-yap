@@ -2,7 +2,7 @@
 
 This was created as a demo for the New England Region of NA to operate closely to their current phoneline.
 
-The changes form base code are :
+The changes from base code are :
 
 * index.php points to ne-input-method.php which has a custom menu structure.
 * Option one points to Meeting Lookup - input-method.php?Digits=2
