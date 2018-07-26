@@ -9,7 +9,7 @@ The changes from base code are :
 index.php points to a custom menu structure. - **ne-input-method.php**
 
 * Option one points to Meeting Lookup - **input-method.php?Digits=2**
-* Option two plays a custom helpline title mp3 and points to **ne-helpline.php**
+* Option two plays a custom helpline title mp3 and points to - **ne-helpline.php**
     * Option one points to a non-urgent helpline which is a custom service body - **helpline-search.php?override_service_body_id=18**
     * Option two points to the normal helpline search - **input-method.php?Digits=1**
     * if any digit besides one or two is selected it redirects to **ne-input-method.php?Digits=2**
