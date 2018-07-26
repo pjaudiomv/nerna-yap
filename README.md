@@ -27,4 +27,4 @@ index.php points to a custom menu structure. - **ne-input-method.php**
 
 voicemail-complete.php - Added ability to send emails to service body using PHPMailer.
 
-This is a mod of YAP 2.0.1 [YAP](https://github.com/radius314/yap/) - YAP
+This is a mod of YAP 2.0.1 [YAP](https://github.com/radius314/yap/)
