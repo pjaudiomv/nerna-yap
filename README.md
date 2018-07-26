@@ -4,7 +4,7 @@ This was created as a demo for the New England Region of NA to operate closely t
 
 The changes from base code are :
 
-* index.php points to ne-input-method.php which has a custom menu structure.
+* index.php points to a custom menu structure. - **ne-input-method.php**
 * Option one points to Meeting Lookup - **input-method.php?Digits=2**
 * Option two points to ne-helpline.php and plays a custom helpline title mp3.
     * ne-helpline.php option one points to a non-urgent helpline which is a custom service body - **helpline-search.php?override_service_body_id=18**
