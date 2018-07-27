@@ -2,7 +2,7 @@
 
 This was created as a demo for the New England Region of NA to operate closely to their current phoneline.
 
-This is a mod of YAP 2.0.1 [YAP](https://github.com/radius314/yap/)
+This is a mod of [YAP](https://github.com/radius314/yap/) [2.0.1](https://github.com/radius314/yap/archive/2.0.1.zip)
 
 The changes from base code are :
 
