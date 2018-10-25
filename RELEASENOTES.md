@@ -1,9 +1,86 @@
 # Release Notes
 
+### 2.5.0 (October 24, 2018)
+* Custom Query support, return all meetings for example for an isolated geographical area, for instance an island. [#11]
+* Meeting results are default sorted starting today and then looping through the week (configurable). [#168]
+* Added list view button for schedule rendering.
+* Fix on volunteer management single shift add not respecting times. [#167]
+* Fix for session initialization issue happening on at least one server. [#165]
+* Fix for "jft" SMS gateway responses that were too long and hitting the 1600 character limit. [#163]
+* Fix for schedule sorting not being respected in calendar view (still a known issue with time sequencing taking precedence). [#162]
+
+### 2.4.0 (October 18, 2018)
+* Support for multiple service body contacts (CSV) for email notifications for voicemail.
+* Support for multiple service body contacts (CSV) for SMS notifications for voicemail.
+* Show enabled volunteers highlighted in light grey, making non-enabled ones more obvious visually. [#161]
+* Added the ability to add 7 day shifts with the same time block.
+* Made debug logging disabled by default and added additional logging messages.
+
+### 2.3.3 (October 8, 2018)
+* Fix for double usage of "components" in Google Maps API bias. [#157]
+* Fix for dealing with bad input as a result of voice recognition on IVR inputs. [#155]
+
+### 2.3.2 (October 2, 2018)
+* Hotfix for broken SMS sending of meeting list information due to a Twilio bug. [#150]
+
+### 2.3.1 (September 30, 2018)
+* Fixed the voice prompt to "press or say" in conjunction with being able to speak responses on menus.
+
+### 2.3.0 (September 30, 2018)
+* Added "jft" response to SMS gateway (support for English, French, Spanish and Brazilian). [#147]
+* You can now press or say any option in the IVR menus.  
+* Postal codes support speech recognition which assists with letters in Canadian ones. [#142]
+* Added French Canadian language support.
+* Migrated retired <Sms> to new <Message> TwiML tag.
+
+### 2.2.2 (September 21, 2018)
+* Playback link of custom prompts on service body configuration modal. [#143]
+* Bug fix for non-default timezone adding for volunteers on single shift entry. [#138]
+* Bug fix for top results count when less than the result_count_max property. [#139]
+* Regression bug fix for helpline lookup failures not handled properly.
+* Retry workflow instead of a hangup when no more meetings found for today for a given lookup.
+
+### 2.2.1 (September 13, 2018)
+* Use Redirect twilio verb instead of header function for redirects. [#133]
+* Fix for int'l numbers that were not auto-prepending "+" on SMS voicemail notification. [#137] 
+* README table of contents fixes
+
+### 2.2.0 (August 28, 2018)
+* Introducing helpline SMS routing. [#46]
+* Notes field added for each volunteer to help with various metadata. [#127]
+* Blocklist for automatically rejecting specific calls or messages. [#125]
+* Fix for int'l numbers that were not auto-prepending "+" on SMS volunteer notification. [#124]
+
+### 2.1.3 (August 14, 2018)
+* Fix for no volunteers specified in schedule edge case. [#122]
+* Phone Numbers page removed from admin portal.
+* Security patch to prevent logins from masquerading root servers. 
+
+### 2.1.2 (Aug 4, 2018)
+* Tomato helpline routing feature.
+* Fixing several bad regressions introduced in 2.1.1 (mostly configuration related). [#116] [#117] [#118]
+
+### 2.1.1 (Aug 3, 2018)
+* Initial pause happens while gather is occurring, allows for extension dialing.
+* Fix for SMS voicemail link as MP3 @pjaudiomv.
+* Fix for disabling volunteer routing after being set.
+* Fix for legacy error handling for not finding helplines in favor of newer method.
+* Security patch to hide smtp settings that were exposed in Settings page on admin portal.
+* Security patch to whitelist all settings (preventing insecure overrides) @DeathCamel58.
+* Security patch to whitelist all languages (prevents directory hopping) @DeathCamel58.
+
+### 2.1.0 (July 27, 2018)
+* Email notifications with voicemail (see the README for more information) [#113]
+* Voicemails are now MP3s to ensure reliable playback and delivery even in the lowest of bandwidth situations.
+* Bug fix: Titles were being cut off.  There is now a 2 second delay to prevent this from happening.
+* Bug fix: Authentication issue with special characters resolved.
+* Bug fix: Voicemail was not working with Forced CallerID, this was resolved.
+* Bug fix: Volunteer routing with no numbers will automatically go to voicemail. [#112]
+
 ### 2.0.1 (July 22, 2018)
-* Bug fix: A schedule with no volunteers now automatically goes to voicemail.
-* Bug fix: Better error handling for saving service bodies and volunteers.
-* Bug fix: An invalid zip code or location was not handling correctly, now it does. 
+* Bug fix: A schedule with no volunteers now automatically goes to voicemail. [#107]
+* Bug fix: Better error handling for saving service bodies and volunteers. 
+* Bug fix: An invalid zip code or location was not handling correctly, now it does. [#106]
 
 ### 2.0.0 (July 19, 2018)
 * The "Admin" portal. Yap has the ability to make managing helpline volunteers very easy. If you are using helpline volunteer routing in Yap 1.x, you know how painful it was.

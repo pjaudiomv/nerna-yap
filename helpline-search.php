@@ -6,22 +6,25 @@
     $dial_string = "";
     if (!isset($_REQUEST['ForceNumber'])) {
         if (isset($_SESSION["override_service_body_id"])) {
-            $service_body = getServiceBody(setting("service_body_id"));
+            $service_body_obj = getServiceBody(setting("service_body_id"));
         } else {
-            $address = $_REQUEST['Digits'];
+            $address = getIvrResponse();
             $coordinates  = getCoordinatesForAddress( $address );
             try {
                 if (!isset($coordinates->latitude) && !isset($coordinates->longitude)) {
                     throw new Exception("Couldn't find an address for that location.");
                 }
-                $service_body = getServiceBodyCoverage( $coordinates->latitude, $coordinates->longitude );
-            } catch (Exception $e) {
-                header("Location: input-method.php?Digits=" . urlencode($_REQUEST["SearchType"]) . "&Retry=1&RetryMessage=" . urlencode($e->getMessage()));
+                $service_body_obj = getServiceBodyCoverage( $coordinates->latitude, $coordinates->longitude );
+            } catch (Exception $e) { ?>
+                <Response>
+                <Redirect method="GET">input-method.php?Digits=<?php echo urlencode($_REQUEST["SearchType"]) . "&amp;Retry=1&amp;RetryMessage=" . urlencode($e->getMessage()); ?></Redirect>
+                </Response>
+                <?php
                 exit();
             }
         }
-        $location    = $service_body->name;
-        $dial_string = $service_body->helpline;
+        $location    = $service_body_obj->name;
+        $dial_string = $service_body_obj->helpline;
         $waiting_message = true;
         $captcha = false;
     } else {
@@ -34,7 +37,7 @@
     $exploded_result = explode("|", $dial_string);
     $phone_number = isset($exploded_result[0]) ? $exploded_result[0] : "";
     $extension = isset($exploded_result[1]) ? $exploded_result[1] : "w";
-    $service_body_id = isset($service_body) ? $service_body->id : 0;
+    $service_body_id = isset($service_body_obj) ? $service_body_obj->id : 0;
 ?>
 <Response>
     <?php
@@ -84,7 +87,6 @@
             <Number sendDigits="<?php echo $extension ?>"><?php echo $phone_number ?></Number>
         </Dial>
     <?php } else { ?>
-        <Say voice="<?php echo setting('voice'); ?>" language="<?php echo setting('language') ?>"><?php echo word('the_location_you_entered_is_not_found') ?></Say>
-        <Redirect method="GET">zip-input.php?Digits=1</Redirect>
+        <Redirect method="GET">input-method.php?Digits=<?php echo urlencode($_REQUEST["SearchType"]) . "&amp;Retry=1&amp;RetryMessage=" . urlencode(word('the_location_you_entered_is_not_found'));?></Redirect>
     <?php } ?>
 </Response>

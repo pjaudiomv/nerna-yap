@@ -4,9 +4,14 @@ lint:
 	find . -name '*.php' -exec php -l {} \;
 
 upgrade:
-	mv config.php ../
-	git pull origin master
-	mv ../config.php .
+	./upgrade.sh
 
 simulate:
 	ngrok http 3100
+
+debug:
+	docker-compose up
+
+test:
+	composer test
+

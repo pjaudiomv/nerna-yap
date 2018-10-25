@@ -1,6 +1,8 @@
 <?php
     include 'functions.php';
-    $inputMethod = $_REQUEST['Digits'];
+    header("content-type: text/xml");
+    echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+    $inputMethod = getIvrResponse("input-method.php", $_REQUEST["SearchType"], ["1", "2", "3"]);
 
     if ($inputMethod == "3") {
         header('Location: fetch-jft.php');
@@ -8,14 +10,11 @@
     }
 
     $searchType = $_REQUEST['SearchType'];
-    if (has_setting('province_lookup') && setting('province_lookup') ) {
+    if (has_setting('province_lookup') && json_decode(setting('province_lookup'))) {
         $action = "province-voice-input.php";
     } else {
         $action = "city-or-county-voice-input.php";
     }
-
-    header("content-type: text/xml");
-    echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 ?>
 <Response>
 <?php

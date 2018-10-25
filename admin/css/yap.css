@@ -59,6 +59,7 @@ div#signin {
 
 .volunteerCard {
     margin-top:10px;
+    background-color: #CCC;
 }
 
 #newVolunteerDialog {
@@ -119,4 +120,25 @@ div#signin {
     float: left;
     padding-right: 45px;
     cursor: move;
+}
+
+.shiftCard {
+    display:none;
+    max-width: 14rem;
+}
+
+.card-columns {
+    column-count: 4;
+}
+
+#shiftCardFooter {
+    margin-bottom:30px;
+}
+
+#volunteer_notes {
+    width: 100%;
+}
+
+.volunteerDisabled {
+    background-color: #FFF;
 }

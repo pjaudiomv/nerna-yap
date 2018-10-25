@@ -39,17 +39,19 @@ function schedulePage() {
         header: {
             left: null,
             center: null,
-            right: "agendaWeek, agendaDay, prev, next"
+            right: "agendaWeek, agendaDay, list, prev, next"
         },
         height: 'auto',
         validRange: {
             start: moment().startOf('day').format("YYYY-MM-DD"),
             end: moment().add(7, 'days').endOf('day').format("YYYY-MM-DD")
         },
+        eventOrder: ['sequence'],
+        slotEventOverlap: false,
         viewRender: function() {
             $(".fa-chevron-left").html("<");
             $(".fa-chevron-right").html(">");
-        }
+        },
     });
 
     $('select#service_body_id').change(function() {
@@ -231,6 +233,10 @@ function addVolunteer(volunteerData) {
         }
     }
 
+    if (volunteerData == null || !volunteerData.hasOwnProperty("volunteer_enabled")) {
+        volunteerCardTemplate.addClass("volunteerDisabled");
+    }
+
     volunteerCardTemplate.appendTo("#volunteerCards");
     while (shiftRenderQueue.length > 0) {
         (shiftRenderQueue.shift())();
@@ -242,16 +248,23 @@ function removeVolunteer(e) {
 }
 
 function checkboxStatusToggle(e) {
+    if (!e.checked) {
+        $(e).closest(".volunteerCard").addClass("volunteerDisabled");
+    } else {
+        $(e).closest(".volunteerCard").removeClass('volunteerDisabled')
+    }
     $(e).val(e.checked);
 }
 
 function renderShift(volunteerId, shiftInfoObj) {
     if (shiftInfoObj !== null) {
         var shiftCardTemplate = $("#shiftCardTemplate").clone();
-        shiftCardTemplate.find("#shiftDay").html(dayOfTheWeek[shiftInfoObj["day"]]);
+        var volunter_type = shiftInfoObj["type"] != null ? shiftInfoObj["type"] : "PHONE";
+        shiftCardTemplate.find("#shiftDay").html(dayOfTheWeek[shiftInfoObj["day"]] + " (" + volunter_type + ")");
         shiftCardTemplate.attr("data", JSON.stringify(shiftInfoObj));
         shiftCardTemplate.find("#shiftInfo").html(shiftInfoObj["start_time"] + "-" + shiftInfoObj["end_time"] + " " + shiftInfoObj["tz"]);
         shiftCardTemplate.show();
+        shiftCardTemplate.css({"display":"inline-block"});
         shiftCardTemplate.appendTo($("#" + volunteerId).find("#shiftsCards"))
     }
 }
@@ -272,6 +285,16 @@ function addShift(e) {
     $("#selectShiftDialog").modal("show");
 }
 
+function add7DayShifts(e) {
+    $(".time_zone_selector").val(Intl.DateTimeFormat().resolvedOptions().timeZone);
+    $("#shiftVolunteerName").html($(e).closest(".volunteerCard").find("#volunteer_name").val());
+    $("#selectRepeatShiftDialog").attr({
+        "volunteer_id": $(e).closest(".volunteerCard").attr("id"),
+        "day_id": $(e).attr("data-shiftid")
+    });
+    $("#selectRepeatShiftDialog").modal("show");
+}
+
 function add24by7Shifts(e) {
     $(".time_zone_selector").val(Intl.DateTimeFormat().resolvedOptions().timeZone);
     $("#selectTimeZoneDialog").attr("data-volunteerid", $(e).closest(".volunteerCard").attr("id"));
@@ -281,12 +304,14 @@ function add24by7Shifts(e) {
 function selectTimeZoneFor247Shifts(e) {
     var volunteerId = $(e).closest("#selectTimeZoneDialog").attr("data-volunteerid");
     var tz = $(e).closest("#selectTimeZoneDialog").find("#time_zone").val();
+    var type = $(e).closest("#selectTimeZoneDialog").find("#shift_type").val();
     for (var x = 1; x <= 7; x++) {
         var shiftInfoObj = {
             "day": x,
             "tz": tz,
             "start_time": '12:00 AM',
-            "end_time": '11:59 PM'
+            "end_time": '11:59 PM',
+            "type": type
         };
 
         renderShift(volunteerId, shiftInfoObj);
@@ -295,17 +320,41 @@ function selectTimeZoneFor247Shifts(e) {
     $("#selectTimeZoneDialog").modal("hide");
 }
 
+function save7DayShifts(e) {
+    var volunteerId = $(e).closest("#selectRepeatShiftDialog").attr("volunteer_id");
+    var tz = $(e).closest("#selectRepeatShiftDialog").find("#time_zone").val();
+    var type = $(e).closest("#selectRepeatShiftDialog").find("#shift_type").val();
+    var start_time = $("#start_time_hour").val() + ":" + $("#start_time_minute").val() + " " + $("#start_time_division").val();
+    var end_time = $("#end_time_hour").val() + ":" + $("#end_time_minute").val() + " " + $("#end_time_division").val();
+    for (var x = 1; x <= 7; x++) {
+        var shiftInfoObj = {
+            "day": x,
+            "tz": tz,
+            "start_time": start_time,
+            "end_time": end_time,
+            "type": type
+        };
+
+        renderShift(volunteerId, shiftInfoObj);
+    }
+
+    $("#selectRepeatShiftDialog").modal("hide");
+}
+
 function saveShift(e) {
     var volunteer_id = $("#selectShiftDialog").attr("volunteer_id");
     var day_id = $("#day_of_the_week").val();
-    var time_zone_id = $("#time_zone").val();
-    var start_time = $("#start_time_hour").val() + ":" + $("#start_time_minute").val() + " " + $("#start_time_division").val();
-    var end_time = $("#end_time_hour").val() + ":" + $("#end_time_minute").val() + " " + $("#end_time_division").val();
+    var closestShiftDialog = $(e).closest("#selectShiftDialog");
+    var time_zone_id = $(closestShiftDialog).find("#time_zone").val();
+    var start_time = $(closestShiftDialog).find("#start_time_hour").val() + ":" + $(closestShiftDialog).find("#start_time_minute").val() + " " + $(closestShiftDialog).find("#start_time_division").val();
+    var end_time = $(closestShiftDialog).find("#end_time_hour").val() + ":" + $(closestShiftDialog).find("#end_time_minute").val() + " " + $(closestShiftDialog).find("#end_time_division").val();
+    var type = $(closestShiftDialog).find("#shift_type").val();
     var shiftInfoObj = {
         "day": day_id,
         "tz": time_zone_id,
         "start_time": start_time,
-        "end_time": end_time
+        "end_time": end_time,
+        "type": type
     };
 
     renderShift(volunteer_id, shiftInfoObj);
@@ -349,6 +398,11 @@ function serviceBodyConfigure(service_body_id) {
     });
 }
 
+function openUrl(e, id) {
+    window.open($(e).parent().find("#" + id).val());
+    return false;
+}
+
 function spinnerDialog(show, text, callback) {
     var d = $("#spinnerDialog");
     if (show) {
@@ -376,3 +430,7 @@ function dataEncoder(dataObject) {
 function dataDecoder(dataString) {
     return JSON.parse(atob(dataString));
 }
+
+Object.prototype.hasOwnProperty = function(property) {
+    return this[property] !== undefined;
+};

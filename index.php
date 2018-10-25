@@ -3,6 +3,7 @@
     header("content-type: text/xml");
     echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 
+    log_debug("version: " . $GLOBALS['version']);
     if (strlen(setting('language_selections')) > 0) {
         if (!isset($_REQUEST["Digits"])) {?>
             <Response><Redirect>language-selector.php</Redirect></Response>
@@ -12,7 +13,7 @@
             $selected_language = explode(",", setting('language_selections'))[intval($_REQUEST["Digits"]) - 1];
             $_SESSION["override_word_language"] = $selected_language;
             $_SESSION["override_gather_language"] = $selected_language;
-            include_once 'lang/'.setting('word_language').'.php';
+            include_once 'lang/'.getWordLanguage().'.php';
         }
     }
 
@@ -20,10 +21,11 @@
         getServiceBodyConfiguration($_REQUEST["override_service_body_id"]);
     }
 
-    $promptset_name = str_replace("-", "_", setting("word_language")) . "_greeting";
+    $promptset_name = str_replace("-", "_", getWordLanguage()) . "_greeting";
 ?>
 <Response>
-    <Gather numDigits="1" timeout="10" action="ne-input-method.php" method="GET">
+    <Gather input="speech dtmf" numDigits="1" timeout="10" speechTimeout="auto" action="ne-input-method.php" method="GET">
+        <Pause length="2"></Pause>
         <?php if (has_setting($promptset_name)) {?>
             <Play><?php echo setting($promptset_name) ?></Play>
         <?php } else { ?>
@@ -39,7 +41,7 @@
                 <?php echo word( 'press' ) . " " . word( 'two' ) . " " . word( 'to_search_for' ) . " " . word( 'meetings' ) ?>
             </Say>
             <?php
-            if ( has_setting( 'jft_option' ) && setting( 'jft_option' ) ) { ?>
+            if ( has_setting( 'jft_option' ) && json_decode(setting( 'jft_option' )) ) { ?>
                 <Say voice="<?php echo setting( 'voice' ) ?>" language="<?php echo setting( 'language' ) ?>">
                     <?php echo word( 'press' ) . " " . word( 'three' ) . " " . word( 'to_listen_to_the_just_for_today' ) ?>
                 </Say>

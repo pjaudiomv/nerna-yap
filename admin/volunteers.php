@@ -17,7 +17,7 @@
         <div class="row">
             <div id="newVolunteerDialog" class="col-sm" style="display:none;">
                 <div class="form-group">
-                    <button id="add-volunteer" class="btn btn-sm btn-primary" type="button" onclick="addVolunteers();""><?php echo word('add_volunteer')?></button>
+                    <button id="add-volunteer" class="btn btn-sm btn-primary" type="button" onclick="addVolunteers();"><?php echo word('add_volunteer')?></button>
                     <button id="save-volunteers" class="btn btn-sm btn-success" type="button" onclick="saveVolunteers();"><?php echo word('save_volunteers')?></button>
                 </div>
             </div>
@@ -29,6 +29,40 @@
                         Select Time Zone For 24/7 Shifts
                     </div>
                     <div class="modal-body">
+                        <div class="form-group form-row">
+                            Time Zone:
+                            <select class="form-control form-control-sm time_zone_selector" id="time_zone">
+                                <?php
+                                foreach (getTimezoneList() as $tzItem) { ?>
+                                    <option value="<?php echo $tzItem?>"><?php echo $tzItem; ?></option>
+                                <?php } ?>
+                            </select>
+
+                            Type:
+                            <select class="form-control form-control-sm type_selector" id="shift_type">
+                                <option value="PHONE" selected>Phone</option>
+                                <option value="SMS">SMS</option>
+                                <option value="PHONE,SMS">Phone & SMS</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" onclick="selectTimeZoneFor247Shifts(this)">Select</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="selectRepeatShiftDialog" tabindex="-1" role="dialog" aria-labelledby="selectRepeatShiftDialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Add Shift: <span id="shiftVolunteerName"></span></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
                         <div class="form-group form-row form-inline">
                             Time Zone:
                             <select class="form-control form-control-sm time_zone_selector" id="time_zone">
@@ -38,10 +72,37 @@
                                 <?php } ?>
                             </select>
                         </div>
+                        <div class="form-group form-row form-inline">
+                            Start Time:
+                            <select class="form-control form-control-sm hours_field" id="start_time_hour"></select> :
+                            <select class="form-control form-control-sm minutes_field" id="start_time_minute"></select>
+                            <select class="form-control form-control-sm division_field" id="start_time_division">
+                                <option value="AM">AM</option>
+                                <option value="PM">PM</option>
+                            </select>
+                        </div>
+                        <div class="form-group form-row form-inline">
+                            End Time:
+                            <select class="form-control form-control-sm hours_field" id="end_time_hour"></select> :
+                            <select class="form-control form-control-sm minutes_field" id="end_time_minute"></select>
+                            <select class="form-control form-control-sm division_field" id="end_time_division">
+                                <option value="AM">AM</option>
+                                <option value="PM">PM</option>
+                            </select>
+                        </div>
+                        <div class="form-group form-row form-inline">
+                            Type:
+                            <select class="form-control form-control-sm type_selector" id="shift_type">
+                                <option value="PHONE" selected>Phone</option>
+                                <option value="SMS">SMS</option>
+                                <option value="PHONE,SMS">Phone + SMS</option>
+                            </select>
+                        </div>
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" onclick="selectTimeZoneFor247Shifts(this)">Select</button>
+                        <button type="button" class="btn btn-primary" onclick="save7DayShifts(this)">Save changes</button>
                     </div>
                 </div>
             </div>
@@ -95,6 +156,15 @@
                                 <option value="PM">PM</option>
                             </select>
                         </div>
+                        <div class="form-group form-row form-inline">
+                            Type:
+                            <select class="form-control form-control-sm type_selector" id="shift_type">
+                                <option value="PHONE" selected>Phone</option>
+                                <option value="SMS">SMS</option>
+                                <option value="PHONE,SMS">Phone + SMS</option>
+                            </select>
+                        </div>
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -121,17 +191,22 @@
                     <th>
                         Shifts
                         <button class="btn btn-sm btn-info" onclick="addShift(this);return false;"><?php echo word('add_shift')?></button>
+                        <button class="btn btn-sm btn-info" onclick="add7DayShifts(this);return false;"><?php echo word('add_7_day_shifts')?></button>
                         <button class="btn btn-sm btn-info" onclick="add24by7Shifts(this);return false;"><?php echo word('add_24by7_shifts')?></button>
                         <button class="btn btn-sm btn-danger" onclick="removeAllShifts(this);return false;"><?php echo word('remove_all_shifts')?></button>
                     </th>
                 </tr>
                 <tr>
                     <td>
-                        <div class="card-deck" id="shiftsCards"></div>
+                        <div class="card-deck">
+                            <div class="card-columns" id="shiftsCards"></div>
+                        </div>
                     </td>
                 </tr>
             </table>
             <input class="day_of_the_week_field" type="text" name="volunteer_shift_schedule" id="volunteer_shift_schedule" size="1"/>
+            <p>Notes</p>
+            <textarea name="volunteer_notes" id="volunteer_notes"></textarea>
         </div>
         <div class="card-footer bg-transparent">
             <div id="volunteerCardFooter" class="float-right">
@@ -144,14 +219,14 @@
         </div>
     </form>
 </div>
-<div class="card text-white bg-secondary mb-3 shiftCard" id="shiftCardTemplate" style="max-width: 15rem; display:none;">
+<div class="card text-white bg-secondary mb-3 shiftCard" id="shiftCardTemplate">
     <div class="card-header">
         <div id="shiftDay"></div>
     </div>
     <div class="card-body">
         <div class="card-text-sm" id="shiftInfo"></div>
     </div>
-    <div class="card-footer">
+    <div id="shiftCardFooter" class="card-footer">
         <div id="shiftRemove" class="float-right">
             <button class="btn btn-sm btn-danger" type="button" onclick="removeShift(this);return false;"><?php echo word('remove')?></button>
         </div>

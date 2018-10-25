@@ -9,7 +9,7 @@ $token                      = $GLOBALS['twilio_auth_token'];
 try {
     $client = new Client( $sid, $token );
 } catch ( \Twilio\Exceptions\ConfigurationException $e ) {
-    error_log("Missing Twilio Credentials");
+    log_debug("Missing Twilio Credentials");
 }
 
 header("content-type: text/xml");
@@ -19,15 +19,17 @@ $conferences = $client->conferences->read( array ("friendlyName" => $_REQUEST['c
 $participants = $client->conferences($conferences[0]->sid)->participants->read();?>
 
 <Response>
-<?php if (count($participants) > 0) {?>
+<?php if (count($participants) > 0) {
+    error_log("Volunteer picked up, asking if they want to take the call.") ?>
     <Gather numDigits="1" timeout="15" action="helpline-answer-response.php?conference_name=<?php echo $_REQUEST['conference_name'] ?>" method="GET">
         <Say voice="<?php echo setting('voice'); ?>" language="<?php echo setting('language') ?>">
-            You have a call from the helpline, press 1 to accept.  Press any other key to hangup.
+            <?php echo word('you_have_a_call_from_the_helpline') ?>
         </Say>
     </Gather>
-<?php } else { ?>
+<?php } else {
+    error_log("The caller hungup.") ?>
     <Say voice="<?php echo setting('voice'); ?>" language="<?php echo setting('language') ?>">
-        Unfortunately the caller hung up before we could connect you.  Good bye.
+        <?php echo word('the_caller_hungup') ?>
     </Say>
     <Hangup/>
 <?php } ?>

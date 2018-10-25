@@ -42,6 +42,7 @@ sort_on_field($service_bodies, 'name');
                                                     <option value="helpline_field">Helpline Field Number</option>
                                                     <option value="volunteers">Volunteers</option>
                                                     <option value="volunteers_redirect">Volunteers Redirect</option>
+                                                    <option value="volunteers_and_sms">Volunteers and SMS</option>
                                                 </select>
 
                                                 Volunteers Redirect Id:
@@ -60,22 +61,31 @@ sort_on_field($service_bodies, 'name');
                                                     <option value="2">Random Forever</option>
                                                 </select>
 
-                                                SMS to Volunteer Options:
+                                                Inbound call SMS to Volunteer Options:
                                                 <select class="form-control form-control-sm" name="volunteer_sms_notification" id="volunteer_sms_notification">
                                                     <option value="no_sms">No SMS</option>
                                                     <option value="send_sms">Send SMS to Volunteer</option>
                                                 </select>
 
+                                                SMS Strategy:
+                                                <select class="form-control form-control-sm" name="sms_strategy" id="sms_strategy">
+                                                    <option value="2">Random</option>
+                                                    <option value="3">Blast</option>
+                                                </select>
+
                                                 Primary Contact Number (typically the Chair/Coordinator):
                                                 <input class="form-control form-control-sm" type="text" name="primary_contact" id="primary_contact">
+
+                                                Primary Contact Email (typically the Chair/Coordinator):
+                                                <input class="form-control form-control-sm" type="text" name="primary_contact_email" id="primary_contact_email">
 
                                                 Music On Hold (<a target="_blank" href="https://github.com/radius314/yap/tree/master#music-on-hold">more</a>):
                                                 <input class="form-control form-control-sm" type="text" name="moh" id="moh">
 
-                                                Recorded Greeting (URL to any MP3):
+                                                Recorded Greeting (URL to any MP3): (<a href="about:blank" onclick="return openUrl(this, 'override_en_US_greeting');">Play</a>)
                                                 <input class="form-control form-control-sm" type="text" name="override_en_US_greeting" id="override_en_US_greeting">
 
-                                                Voice Mail Greeting (URL to any MP3):
+                                                Voice Mail Greeting (URL to any MP3): (<a href="about:blank" onclick="return openUrl(this, 'override_en_US_voicemail_greeting');">Play</a>)
                                                 <input class="form-control form-control-sm" type="text" name="override_en_US_voicemail_greeting" id="override_en_US_voicemail_greeting">
                                             </form>
                                         </div>

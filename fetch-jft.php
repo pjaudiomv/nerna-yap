@@ -3,18 +3,14 @@ include 'functions.php';
 
 header("content-type: text/xml");
 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
-
-$result = get("http://www.jftna.org/jft/");
-$stripped_results = strip_tags($result);
-$without_tabs = str_replace("\t", "", $stripped_results);
-$final_array = explode("\n", $without_tabs);
+$jft_array = get_jft();
 ?>
 <Response>
     <?php
-        foreach ($final_array as $item)  {
-            if ($item != "") {
+        foreach ($jft_array as $item)  {
+            if (trim($item) != "") {
                 echo "<Say voice=\"" . setting('voice') . "\" language=\"" . setting('language') . "\">"
-                     . html_entity_decode($item) . "</Say>";
+                     . html_entity_decode($item, null, "UTF-8") . "</Say>";
             }
         }
     ?>

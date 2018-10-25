@@ -36,7 +36,7 @@ function getCallConfig($client, $serviceBodyConfiguration) {
     }
 
     $config = new CallConfig();
-    $config->phone_number = getHelplineVolunteer( $serviceBodyConfiguration->service_body_id, $tracker, $serviceBodyConfiguration->call_strategy );
+    $config->phone_number = getHelplineVolunteer( $serviceBodyConfiguration->service_body_id, $tracker, $serviceBodyConfiguration->call_strategy, VolunteerType::PHONE );
     $config->voicemail_url = $webhook_url . '/voicemail.php?service_body_id=' . $serviceBodyConfiguration->service_body_id . '&caller_id=' . trim($caller_id);
     $config->options = array(
         'url'                  => $webhook_url . '/helpline-outdial-response.php?conference_name=' . $_REQUEST['FriendlyName'],
@@ -58,7 +58,7 @@ $token                      = $GLOBALS['twilio_auth_token'];
 try {
     $client = new Client( $sid, $token );
 } catch ( \Twilio\Exceptions\ConfigurationException $e ) {
-    error_log("Missing Twilio Credentials");
+    log_debug("Missing Twilio Credentials");
 }
 
 if (isset($_REQUEST["Debug"])) {
@@ -72,38 +72,45 @@ if (count($conferences) > 0 && $conferences[0]->status != "completed") {
     if ( ( isset( $_REQUEST['SequenceNumber'] ) && intval( $_REQUEST['SequenceNumber'] ) == 1 ) ||
          ( isset( $_REQUEST['CallStatus'] ) && ( $_REQUEST['CallStatus'] == 'no-answer' || $_REQUEST['CallStatus'] == 'completed' ) ) ) {
         $callConfig = getCallConfig($client, $serviceBodyConfiguration);
-        error_log( "Dialing " . $callConfig->phone_number );
+        log_debug("Next volunteer to call " . $callConfig->phone_number);
 
         $participants = $client->conferences($conferences[0]->sid)->participants->read();
 
         // Do not call if the caller hung up.
         if (count($participants) > 0) {
-            $callerSid = $participants[0]->callSid;
-            $callerNumber = $client->calls( $callerSid )->fetch()->from;
-            if ($callConfig->phone_number == SpecialPhoneNumber::VOICE_MAIL || $callConfig->phone_number == SpecialPhoneNumber::UNKNOWN) {
-                $client->calls($callerSid)->update(array(
-                    "method" => "GET",
-                    "url" => $callConfig->voicemail_url . "&caller_number=" . $callerNumber
-                ));
-            } else {
-                try {
-                    if ( $serviceBodyConfiguration->volunteer_sms_notification_enabled ) {
+            try {
+                $callerSid = $participants[0]->callSid;
+                $callerNumber = $client->calls($callerSid)->fetch()->from;
+                if (strpos($callerNumber, "+") !== 0) {
+                    $callerNumber .= "+" . trim($callerNumber);
+                }
+                log_debug("callerNumber: " . $callerNumber . ", callerSid: " . $callerSid);
+                if ($callConfig->phone_number == SpecialPhoneNumber::VOICE_MAIL || $callConfig->phone_number == SpecialPhoneNumber::UNKNOWN) {
+                    log_debug("Calling voicemail.");
+                    $client->calls($callerSid)->update(array(
+                        "method" => "GET",
+                        "url" => $callConfig->voicemail_url . "&caller_number=" . $callerNumber
+                    ));
+                } else {
+                    if ($serviceBodyConfiguration->volunteer_sms_notification_enabled) {
+                        log_debug("Sending volunteer SMS notification: " . $callConfig->phone_number);
                         $client->messages->create(
                             $callConfig->phone_number,
                             array(
                                 "body" => "You have an incoming helpline call from " . $callerNumber . ".",
                                 "from" => $callConfig->options['originalCallerId']
-                            ) );
+                            ));
                     }
 
+                    log_debug("Calling: " . $callConfig->phone_number);
                     $client->calls->create(
                         $callConfig->phone_number,
                         $callConfig->options['callerId'],
                         $callConfig->options
                     );
-                } catch ( \Twilio\Exceptions\TwilioException $e ) {
-                    error_log( $e );
                 }
+            } catch ( \Twilio\Exceptions\TwilioException $e ) {
+                log_debug( $e );
             }
         }
     } elseif ( isset( $_REQUEST['StatusCallbackEvent'] ) && $_REQUEST['StatusCallbackEvent'] == 'participant-leave' ) {
@@ -111,6 +118,7 @@ if (count($conferences) > 0 && $conferences[0]->status != "completed") {
         $conference_participants = $client->conferences( $conference_sid )->participants;
         foreach ( $conference_participants as $participant ) {
             try {
+                log_debug("Someone left the conference: " . $participant->callSid);
                 $client->calls( $participant->callSid )->update( array( $status => 'completed' ) );
             } catch ( \Twilio\Exceptions\TwilioException $e ) {
                 error_log($e);
