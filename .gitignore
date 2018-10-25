@@ -5,3 +5,8 @@ cookie.txt
 config.php.*
 test.php
 .DS_Store
+index.php
+na-info.php
+ne-concerned.php
+ne-helpline.php
+ne-input-method.php
