@@ -1,7 +1,7 @@
 <?php
-include 'config.php';
 include 'functions.php';
-$searchType = $_REQUEST['Digits'];
+$searchType = getIvrResponse("index.php", "", ["1", "2", "3", "4", "5", "6"]);
+
 header("content-type: text/xml");
 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"; ?>
    

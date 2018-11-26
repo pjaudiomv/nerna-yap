@@ -2,7 +2,7 @@
 include_once 'config.php';
 include_once 'logging.php';
 include_once 'session.php';
-static $version = "2.5.0";
+static $version = "2.5.1";
 static $settings_whitelist = [
     'blocklist' => [ 'description' => '' , 'default' => '', 'overridable' => true],
     'bmlt_root_server' => [ 'description' => '' , 'default' => '', 'overridable' => false],
@@ -444,8 +444,10 @@ function meetingSearch($meeting_results, $latitude, $longitude, $day) {
     $filteredList = $meeting_results->filteredList;
     if ($search_response !== "{}") {
         for ($i = 0; $i < count($search_results); $i++) {
-            if (strpos($bmlt_search_endpoint, "{DAY}") && !isItPastTime($search_results[$i]->weekday_tinyint, $search_results[$i]->start_time)) {
-                array_push($filteredList, $search_results[$i]);
+            if (strpos($bmlt_search_endpoint, "{DAY}")) {
+                if (!isItPastTime($search_results[$i]->weekday_tinyint, $search_results[$i]->start_time)) {
+                    array_push($filteredList, $search_results[$i]);
+                }
             } else {
                 array_push($filteredList, $search_results[$i]);
             }
