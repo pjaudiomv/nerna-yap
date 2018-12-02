@@ -16,7 +16,7 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"; ?>
         <Response>
          <Gather language="<?php echo setting('gather_language') ?>"
                         hints="<?php echo setting('gather_hints')?>"
-                        input="dtmf"
+                        input="<?php echo getInputType() ?>"
                         timeout="15"
                         numDigits="1"
                         action="ne-helpline.php">
@@ -37,7 +37,7 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"; ?>
         <Response>
          <Gather language="<?php echo setting('gather_language') ?>"
                         hints="<?php echo setting('gather_hints')?>"
-                        input="dtmf"
+                        input="<?php echo getInputType() ?>"
                         timeout="15"
                         numDigits="1"
                         action="helpline-search.php?override_service_body_id=17">
@@ -51,7 +51,7 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"; ?>
         <Response>
            <Gather language="<?php echo setting('gather_language') ?>"
                         hints="<?php echo setting('gather_hints')?>"
-                        input="dtmf"
+                        input="<?php echo getInputType() ?>"
                         timeout="15"
                         numDigits="1"
                         action="ne-concerned.php">
@@ -65,7 +65,7 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"; ?>
         <Response>
            <Gather language="<?php echo setting('gather_language') ?>"
                         hints="<?php echo setting('gather_hints')?>"
-                        input="dtmf"
+                        input="<?php echo getInputType() ?>"
                         timeout="15"
                         numDigits="1"
                         action="na-info.php">
