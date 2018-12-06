@@ -24,7 +24,7 @@
     $promptset_name = str_replace("-", "_", getWordLanguage()) . "_greeting";
 ?>
 <Response>
-    <Gather input="" numDigits="1" timeout="10" speechTimeout="auto" action="ne-input-method.php" method="GET">
+    <Gather input="<?php echo getInputType() ?>" numDigits="1" timeout="10" speechTimeout="auto" action="ne-input-method.php" method="GET">
         <Pause length="2"></Pause>
         <?php if (has_setting($promptset_name)) {?>
             <Play><?php echo setting($promptset_name) ?></Play>
